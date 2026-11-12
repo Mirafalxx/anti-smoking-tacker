@@ -1,0 +1,29 @@
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2.1px;
+  font-weight: 800;
+  color: #899480;
+}
+.primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #526b58 !important;
+  color: white !important;
+  padding: 15px 28px;
+  min-height: 49px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px #526b5814;
+}
+.primary:hover {
+  background: #405744 !important;
+}
+@media (max-width: 650px) {
+  .primary {
+    padding: 14px 20px;
+    font-size: 12px;
+  }
+}

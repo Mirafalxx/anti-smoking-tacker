@@ -1,0 +1,73 @@
+.app {
+  min-height: 100vh;
+  padding-bottom: 128px;
+}
+.main {
+  max-width: 1032px;
+  margin: 48px auto 0;
+  padding: 0 28px;
+}
+.demo {
+  background: #ebeee4;
+  color: #7d886f;
+  padding: 11px 15px;
+  border-radius: 9px;
+  font-size: 11px;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+.welcome {
+  max-width: 900px;
+  margin: 100px auto 0;
+  padding: 25px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.welcome h1 {
+  font-size: 52px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -2px;
+}
+.welcome p {
+  color: #8b9583;
+  line-height: 1.9;
+}
+.welcome small {
+  color: #8d9587;
+  font-size: 11px;
+}
+@media (min-width: 1400px) {
+  .main {
+    margin-top: 60px;
+  }
+}
+@media (max-width: 650px) {
+  .main {
+    margin-top: 28px;
+    padding: 0 16px;
+  }
+  .welcome {
+    margin-top: 55px;
+    padding: 20px;
+    gap: 21px;
+  }
+  .welcome h1 {
+    font-size: 35px;
+    letter-spacing: -1.5px;
+  }
+  .welcome p {
+    font-size: 12px;
+  }
+  .demo {
+    font-size: 10px;
+  }
+}
+@media (max-width: 650px) {
+  .app {
+    padding-bottom: 190px;
+  }
+}

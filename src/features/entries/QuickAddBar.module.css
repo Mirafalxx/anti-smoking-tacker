@@ -1,0 +1,49 @@
+.actionBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background: #fffefaed;
+  backdrop-filter: blur(16px);
+  border-top: 1px solid #e2e6d9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px max(28px, calc((100vw - 976px) / 2));
+  padding-bottom: max(18px, env(safe-area-inset-bottom));
+}
+.actionBar > span {
+  font-size: 12px;
+  font-weight: 600;
+}
+.actionBar > span > span {
+  display: block;
+  color: #9ca48f;
+  font-size: 10px;
+  font-weight: 400;
+  margin-top: 5px;
+}
+@media (max-width: 650px) {
+  .actionBar {
+    padding: 14px 16px;
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+  }
+  .actionBar > span {
+    font-size: 11px;
+  }
+  .actionBar > span > span {
+    max-width: 130px;
+    font-size: 9px;
+    line-height: 1.5;
+  }
+}
+@media (max-width: 650px) {
+  .actionBar {
+    bottom: calc(57px + env(safe-area-inset-bottom));
+    padding-bottom: 12px;
+  }
+}
+.primary {
+  composes: primary from "../../shared/styles/primitives.module.css";
+}

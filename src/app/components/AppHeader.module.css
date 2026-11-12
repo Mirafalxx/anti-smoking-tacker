@@ -1,0 +1,105 @@
+.header {
+  height: 88px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 36px;
+  border-bottom: 1px solid #e2e5dc;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-weight: 800;
+  font-size: 27px;
+  letter-spacing: -1.3px;
+}
+.logo {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: #e4ebdf;
+  color: #526b58;
+}
+.brandCaption {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  border-left: 1px solid #d9ddd3;
+  margin-left: 12px;
+  padding-left: 23px;
+  color: #8a9187;
+}
+.headerRight {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.connection {
+  font-size: 11px;
+  color: #7d897a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.avatar {
+  width: 38px;
+  min-height: 38px;
+  border-radius: 50%;
+  background: #e8eade;
+  border: 1px solid #dde1d4;
+  font-size: 13px;
+}
+.profile {
+  position: absolute;
+  right: 25px;
+  top: 80px;
+  z-index: 12;
+  background: #fffefa;
+  border: 1px solid #dce2d3;
+  border-radius: 15px;
+  padding: 22px;
+  box-shadow: 0 12px 35px #29352e16;
+  max-width: calc(100vw - 30px);
+  overflow-wrap: anywhere;
+}
+.profile p {
+  font-size: 11px;
+  color: #8b9582;
+  margin: 8px 0;
+}
+.profile small {
+  font-size: 10px;
+}
+.profile button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+@media (max-width: 650px) {
+  .header {
+    height: 72px;
+    padding: 0 20px;
+  }
+  .brand {
+    font-size: 25px;
+  }
+  .brandCaption {
+    display: none;
+  }
+  .connection {
+    font-size: 9px;
+    max-width: 135px;
+  }
+  .headerRight {
+    gap: 12px;
+  }
+  .profile {
+    right: 15px;
+  }
+}

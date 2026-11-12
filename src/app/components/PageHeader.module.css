@@ -1,0 +1,96 @@
+.pageHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pageHeading h1 {
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: -1.2px;
+  margin: 8px 0 9px;
+}
+.pageHeading p {
+  color: #8b9187;
+  font-size: 13px;
+}
+.dateBadge {
+  font-size: 11px;
+  color: #8a9184;
+  text-transform: capitalize;
+  background: #eeeee7;
+  padding: 10px 14px;
+  border-radius: 9px;
+}
+.tabs {
+  display: flex;
+  gap: 24px;
+  margin: 35px 0 24px;
+  border-bottom: 1px solid #dde2d7;
+}
+.tabs button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 0;
+  padding: 0 3px 15px;
+  color: #8b9287;
+  font-size: 12px;
+  border-bottom: 2px solid transparent;
+}
+.tabs .tabActive {
+  border-color: #526b58;
+  color: #435e48;
+  font-weight: 700;
+}
+@media (max-width: 650px) {
+  .pageHeading h1 {
+    font-size: 28px;
+  }
+  .pageHeading p {
+    font-size: 11px;
+    max-width: 230px;
+    line-height: 1.6;
+  }
+  .dateBadge {
+    display: none;
+  }
+  .tabs {
+    margin-top: 25px;
+    gap: 23px;
+  }
+  .tabs button {
+    font-size: 12px;
+    min-height: 46px;
+  }
+}
+@media (max-width: 650px) {
+  .tabs {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    z-index: 6;
+    background: #fffefa;
+    border-top: 1px solid #e0e5d8;
+    border-bottom: 0;
+    gap: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .tabs button {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 0;
+    min-height: 57px;
+    border-bottom: 0;
+    border-top: 2px solid transparent;
+    font-size: 11px;
+  }
+  .tabs .tabActive {
+    background: #f1f5ec;
+    border-top-color: #526b58;
+  }
+}
+.eyebrow {
+  composes: eyebrow from "../../shared/styles/primitives.module.css";
+}

@@ -1,0 +1,69 @@
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 0 0 24px;
+}
+.summary article {
+  background: #fffefa;
+  border: 1px solid #e2e5da;
+  border-radius: 15px;
+  padding: 23px 25px;
+}
+.summary article > span {
+  font-size: 12px;
+  color: #7e887b;
+}
+.summary strong {
+  display: block;
+  font-size: 39px;
+  letter-spacing: -1.4px;
+  font-weight: 600;
+  margin: 11px 0 8px;
+  line-height: 1.1;
+}
+.summary strong small {
+  font-size: 13px;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: #9ba091;
+}
+.summary p {
+  font-size: 10px;
+  color: #9a9f93;
+}
+.summary .todayCard {
+  background: #eaf0e4;
+  border-color: #dce6d4;
+}
+@media (max-width: 650px) {
+  .summary {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .summary article {
+    padding: 15px 11px;
+    border-radius: 12px;
+  }
+  .summary article > span {
+    font-size: 9px;
+    line-height: 1.5;
+    display: block;
+    min-height: 27px;
+  }
+  .summary strong {
+    font-size: 29px;
+    margin: 5px 0;
+  }
+  .summary strong small {
+    font-size: 10px;
+  }
+  .summary p {
+    display: none;
+  }
+}
+@media (max-width: 650px) {
+  .summary {
+    margin-top: 24px;
+  }
+}

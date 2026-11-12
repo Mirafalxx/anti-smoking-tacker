@@ -1,0 +1,38 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 22px;
+  align-items: center;
+}
+.filters label {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.presets {
+  display: flex;
+  gap: 5px;
+}
+.presets button {
+  border: 1px solid #dce2d3;
+  padding: 0 13px;
+  font-size: 11px;
+}
+@media (max-width: 650px) {
+  .filters {
+    gap: 9px;
+  }
+  .filters label {
+    font-size: 10px;
+  }
+  .filters input {
+    font-size: 11px;
+    padding: 8px;
+    width: 132px;
+  }
+  .presets {
+    width: 100%;
+  }
+}

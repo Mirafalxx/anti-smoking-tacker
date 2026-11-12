@@ -1,0 +1,17 @@
+.footnote {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 11px;
+  margin: 27px 0;
+  color: #a1aa94;
+}
+.footnote p {
+  font-size: 10px;
+  line-height: 1.8;
+}
+@media (max-width: 650px) {
+  .footnote {
+    margin: 23px 0;
+  }
+}

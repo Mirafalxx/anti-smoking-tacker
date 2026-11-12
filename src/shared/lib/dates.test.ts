@@ -1,5 +1,23 @@
 import { describe, it, expect } from "vitest";
-import { daysBetween, dayKey, countDay, Entry } from "./model";
+import { daysBetween, dayKey } from "./dates";
+import { countDay, type Entry } from "../model/tracker";
+import { wallTimeToIso } from "./dates";
+
+describe("Редактирование времени в часовом поясе аккаунта", () => {
+  it("конвертирует Бишкек независимо от часового пояса устройства", () => {
+    expect(wallTimeToIso("2026-11-12T01:30", "Asia/Bishkek")).toBe(
+      "2026-11-11T19:30:00.000Z",
+    );
+  });
+  it("учитывает переход через полночь в отрицательном смещении", () => {
+    expect(wallTimeToIso("2026-11-11T23:30", "America/New_York")).toBe(
+      "2026-11-12T04:30:00.000Z",
+    );
+  });
+  it("не сохраняет невалидное значение поля времени", () => {
+    expect(wallTimeToIso("", "Asia/Bishkek")).toBeNull();
+  });
+});
 describe("Даты и подсчёт", () => {
   it("включает обе границы и високосный день", () =>
     expect(daysBetween("2024-02-28", "2024-03-01")).toEqual([
