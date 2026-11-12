@@ -64,7 +64,7 @@ npm run build
 npm run preview
 ```
 
-Тесты проверяют дневные итоги, перенос и удаление, границы дат и часовые пояса. Тесты правил запускаются отдельным workflow `rules.yml` с Java 21 и Firebase Emulator; без переменной `FIRESTORE_EMULATOR_HOST` они пропускаются. Локальный запуск с установленной Java 21:
+Тесты проверяют дневные итоги, перенос и удаление, границы дат и часовые пояса. Тесты правил запускаются переиспользуемым workflow `rules.yml` с Java 21 и Firebase Emulator: основной pipeline вызывает его перед публикацией. Без переменной `FIRESTORE_EMULATOR_HOST` в обычном `npm test` они пропускаются. Локальный запуск с установленной Java 21:
 
 ```sh
 npx --yes firebase-tools@14 emulators:exec --only firestore --project demo-tishe "npm run test:rules"
@@ -74,15 +74,47 @@ npx --yes firebase-tools@14 emulators:exec --only firestore --project demo-tishe
 
 ## GitHub Pages
 
-1. Создайте репозиторий, добавьте remote и отправьте код в ветку `main`.
-2. Settings → Pages → Source: GitHub Actions.
-3. Settings → Secrets and variables → Actions → Variables: добавьте `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_APP_ID`.
-4. Push в `main` запускает тесты, сборку и публикацию. Адрес: `https://<логин>.github.io/<репозиторий>/`.
-5. Проверьте Google-вход на опубликованном домене и обновление страниц `#/` и `#/stats`.
+Конфигурация CI/CD подготовлена локально; публикация пока выключена. Основная ветка для публикации — `main`. В `master` можно продолжать разработку: push в неё этот pipeline не запускает.
+
+В `.github/workflows/deploy.yml` настроены три job:
+
+- `build`: Node.js 24, `npm ci`, unit-тесты, проверка Firebase-конфигурации, production-сборка и загрузка `dist` в артефакт Pages.
+- `rules`: отдельная проверка правил в Firebase Emulator через `.github/workflows/rules.yml`.
+- `deploy`: публикация собранного артефакта после успешного завершения обоих job. Разрешена только для push в `main` и только если `PAGES_DEPLOY_ENABLED=true`.
+
+Pull request в `main` и ручной запуск из Actions выполняют проверки и сборку без публикации. Push в `main` при выключенном флаге также только проверяет и собирает приложение. Ошибка проверки или сборки блокирует публикацию. Схема build → artifact → deploy соответствует [рекомендациям GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+### Подготовить CI без публикации
+
+1. Откройте [Actions Variables репозитория](https://github.com/Mirafalxx/anti-smoking-tacker/settings/variables/actions).
+2. В Repository variables добавьте четыре значения из локального `.env.local`:
+
+   | Имя | Что указать |
+   | --- | --- |
+   | `VITE_FIREBASE_API_KEY` | Значение `apiKey` из Firebase Web App config |
+   | `VITE_FIREBASE_AUTH_DOMAIN` | `anti-smoking-tracker.firebaseapp.com` |
+   | `VITE_FIREBASE_PROJECT_ID` | `anti-smoking-tracker` |
+   | `VITE_FIREBASE_APP_ID` | Значение `appId` из Firebase Web App config |
+   | `PAGES_DEPLOY_ENABLED` | `false` — пока не готовы публиковать |
+
+3. Сохраните конфигурацию в Git и отправьте её в `main`, когда будете готовы запустить только CI. Без четырёх Firebase Variables сборка остановится с перечнем недостающих имён; заглушки `TMP_...` также отклоняются. Локальный `.env.local` GitHub Actions не читает.
+
+Отсутствие `PAGES_DEPLOY_ENABLED` равнозначно выключенной публикации. В текущей задаче push и запуск workflow не выполнялись.
+
+### Включить автопубликацию позже
+
+1. В [Settings → Pages](https://github.com/Mirafalxx/anti-smoking-tacker/settings/pages) выберите Source: **GitHub Actions**.
+2. Если environment `github-pages` ограничивает ветки, разрешите ему деплой из `main`.
+3. Убедитесь, что домен `mirafalxx.github.io` добавлен в Firebase Authentication → Settings → Authorized domains.
+4. Измените Repository variable `PAGES_DEPLOY_ENABLED` на `true`.
+5. Следующий push в `main` автоматически запустит проверки, сборку и деплой. Само изменение переменной workflow не запускает.
+6. Проверьте адрес `https://mirafalxx.github.io/anti-smoking-tacker/`, Google-вход и обновление страниц `#/` и `#/stats`.
 
 Для репозитория `<логин>.github.io` замените `VITE_BASE_PATH` в workflow на `/`. Для обычного project Pages путь вычисляется из названия репозитория автоматически.
 
-Правила Firestore не публикуются через Pages: применяйте их отдельно в Firebase Console после изменений. Обновления приложения публикуются push в `main`.
+Чтобы сменить ветку автопубликации, измените `on.push.branches`, `on.pull_request.branches` и проверку `github.ref` в job `deploy`, затем согласуйте разрешённые ветки environment `github-pages`.
+
+Правила Firestore проверяются автоматически, но не публикуются через Pages: применяйте их отдельно в Firebase Console после изменений. Для публикации используется встроенный `GITHUB_TOKEN`; отдельный PAT или SSH-ключ в workflow не требуется.
 
 ## Офлайн и ограничения
 

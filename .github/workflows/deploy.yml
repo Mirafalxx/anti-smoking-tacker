@@ -1,41 +1,80 @@
-name: Deploy to GitHub Pages
+name: CI and GitHub Pages
+
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
+
 permissions:
   contents: read
-  pages: write
-  id-token: write
+
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
-  deploy:
+  build:
+    name: Test and build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_BASE_PATH: /${{ github.event.repository.name }}/
+      VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+      VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+      VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+      VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run unit tests
+        run: npm test
+      - name: Validate Firebase configuration
+        run: |
+          node --input-type=module <<'NODE'
+          const required = ['VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_AUTH_DOMAIN', 'VITE_FIREBASE_PROJECT_ID', 'VITE_FIREBASE_APP_ID'];
+          const missing = required.filter(key => !process.env[key]?.trim() || process.env[key].startsWith('TMP_'));
+          if (missing.length) {
+            console.error('Set repository Actions Variables: ' + missing.join(', '));
+            process.exit(1);
+          }
+          NODE
+      - name: Build production app
+        run: npm run build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  rules:
+    name: Check Firestore rules
+    uses: ./.github/workflows/rules.yml
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: [build, rules]
+    # PRs and manual runs only validate/build. Enable publication explicitly.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.PAGES_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: |
-          node -e "for (const key of ['VITE_FIREBASE_API_KEY','VITE_FIREBASE_AUTH_DOMAIN','VITE_FIREBASE_PROJECT_ID','VITE_FIREBASE_APP_ID']) { if (!process.env[key]) throw new Error('Missing GitHub Actions variable: ' + key); }"
-          npm run build
-        env:
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
-          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-      - uses: actions/deploy-pages@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Deploy built artifact
+        uses: actions/deploy-pages@v4
         id: deployment
