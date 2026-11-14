@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+
 export function useDialogFocus(onClose: () => void) {
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
@@ -11,11 +12,7 @@ export function useDialogFocus(onClose: () => void) {
         onClose();
       }
       if (event.key !== "Tab") return;
-      const items = Array.from(
-        dialog?.querySelectorAll<HTMLElement>(
-          "button:not(:disabled), input:not(:disabled)",
-        ) || [],
-      );
+      const items = Array.from(dialog?.querySelectorAll<HTMLElement>("button:not(:disabled), input:not(:disabled)") || []);
       const first = items[0],
         last = items[items.length - 1];
       if (event.shiftKey && document.activeElement === first) {
